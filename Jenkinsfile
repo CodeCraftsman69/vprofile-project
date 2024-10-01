@@ -202,7 +202,7 @@ pipeline {
              steps {
        
              script {
-                dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER")
+                dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
              }
 
             }
