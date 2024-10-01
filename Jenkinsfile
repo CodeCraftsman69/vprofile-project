@@ -14,6 +14,8 @@ pipeline {
         registryCredential = 'ecr:eu-north-1:awscreds'
         appRegistry = "047719647048.dkr.ecr.eu-north-1.amazonaws.com/vprofile"
         vprofileRegistry = "https://047719647048.dkr.ecr.eu-north-1.amazonaws.com"
+        cluster = "vprofile1"
+        service = "vprofile-service"
     }
 
     stages {
@@ -224,6 +226,13 @@ pipeline {
                     // Remove the image from the local Docker environment to save space
                     sh "docker rmi ${appRegistry}:$BUILD_NUMBER || true"
                     sh "docker rmi ${appRegistry}:latest || true"
+                }
+            }
+        }
+        stage('Deploy to ecs') {
+          steps {
+            withAWS(credentials: 'awscreds', region: 'eu-north-1') {
+            sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
                 }
             }
         }
