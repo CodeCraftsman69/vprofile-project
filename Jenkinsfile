@@ -217,7 +217,16 @@ pipeline {
               }
             }
           }
-     }
+        }
+          stage('Remove Docker Images') {
+            steps {
+                script {
+                    // Remove the image from the local Docker environment to save space
+                    sh "docker rmi ${appRegistry}:$BUILD_NUMBER || true"
+                    sh "docker rmi ${appRegistry}:latest || true"
+                }
+            }
+        }
 
     }
 
